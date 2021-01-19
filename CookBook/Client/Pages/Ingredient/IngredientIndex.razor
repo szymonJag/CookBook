@@ -1,0 +1,91 @@
+﻿@page "/ingredients"
+@inject IIngredientRepository ingredientRepository
+<h3>Ingredients list</h3>
+
+<IngredientEditForm Ingredient="Ingredient" OnValidSubmit="ValidSubmit" ButtonText="@text" />
+
+<br />
+<br />
+
+<div class="container col-12">
+    <div class="row col-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Kcal</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ListOfIngredients.Any())
+                {
+                    @foreach (var ingredient in ListOfIngredients)
+                    {
+                        <tr>
+                            <td>@ingredient.Name</td>
+                            <td>@ingredient.Kcal</td>
+                            <td>
+                                <button class="btn btn-primary" @onclick="@(()=>EditIngredient(ingredient))">Edit</button>
+                                |
+                                <button class="btn btn-danger" @onclick="@(()=>Delete(ingredient.Id))">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@code {
+
+    public Ingredient Ingredient { get; set; } = new Ingredient();
+    public List<Ingredient> ListOfIngredients { get; set; } = new List<Ingredient>();
+    public bool IsEdit { get; set; } = false;
+    private string text = "Save";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadList();
+    }
+
+    private async Task Delete(int id)
+    {
+        await ingredientRepository.DeleteIngredient(id);
+        await LoadList();
+    }
+
+    private void EditIngredient(Ingredient ingredient)
+    {
+        Ingredient = ingredient;
+        IsEdit = true;
+        text = "Edit";
+    }
+
+    private async Task LoadList()
+    {
+        ListOfIngredients = await ingredientRepository.GetListOfIngredients();
+    }
+
+    private async Task ValidSubmit()
+    {
+        if (!IsEdit)
+        {
+            Console.WriteLine("Create");
+            await ingredientRepository.CreateIngredient(Ingredient);
+        }
+        else
+        {
+            Console.WriteLine("Update");
+            await ingredientRepository.UpdateIngredient(Ingredient);
+        }
+
+        text = "Save";
+        IsEdit = false;
+        Ingredient = new Ingredient();
+        await LoadList();
+
+    }
+}

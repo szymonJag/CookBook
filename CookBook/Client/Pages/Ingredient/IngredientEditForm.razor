@@ -1,0 +1,39 @@
+﻿<div class="container">
+    <div class="row col-5">
+        <EditForm Model="Ingredient" OnValidSubmit="OnValidSubmit">
+            <div class="form-group row">
+                <label for="name">Name</label>
+                <div>
+                    <InputText class="form-control" id="name" @bind-Value="Ingredient.Name" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="name">Name</label>
+                <div>
+                    <InputNumber class="form-control" id="name" @bind-Value="Ingredient.Kcal" />
+                </div>
+            </div>
+            <button class="btn btn-primary">@ButtonText</button>
+            <button class="btn btn-danger" @onclick="Clear">Clear</button>
+        </EditForm>
+    </div>
+
+</div>
+
+
+
+@code {
+    [Parameter]
+    public Ingredient Ingredient { get; set; } = new Ingredient();
+
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; }
+
+    private void Clear()
+    {
+        Ingredient = new Ingredient();
+    }
+}

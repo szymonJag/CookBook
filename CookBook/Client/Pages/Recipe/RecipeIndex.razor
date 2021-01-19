@@ -1,0 +1,37 @@
+﻿@page "/recipes"
+@inject IRecipeRepository recipeRepository
+
+<h3>RecipeIndex</h3>
+
+<div class="container">
+    <div class="row col-3">
+        <a href="/recipes/create" class="btn btn-primary">Create Recipe</a>
+    </div>
+</div>
+
+@if (ListOfRecipes != null)
+{
+    <TableTemplate Items="ListOfRecipes">
+        <TableHeader>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Details</th>
+        </TableHeader>
+        <RowTemplate Context="recipe">
+            <tr>@recipe.Id</tr>
+            <tr>@recipe.Name</tr>
+            <tr>Details</tr>
+        </RowTemplate>
+    </TableTemplate>
+}
+
+
+
+@code {
+    public List<Recipe> ListOfRecipes { get; set; } = new List<Recipe>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListOfRecipes = await recipeRepository.GetListOfRecipes();
+    }
+}
