@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace CookBook.Client.Repositories
@@ -20,7 +21,15 @@ namespace CookBook.Client.Repositories
         }
         public async Task CreateRecipe(Recipe recipe)
         {
-            var response = await httpClient.PostAsJsonAsync(url, recipe);
+
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve
+            };
+
+            string json = JsonSerializer.Serialize(recipe, options);
+
+            var response = await httpClient.PostAsJsonAsync(url, json);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -45,6 +54,7 @@ namespace CookBook.Client.Repositories
 
             if (response.IsSuccessStatusCode)
             {
+
                 recipe = JsonSerializer.Deserialize<Recipe>(await response.Content.ReadAsStringAsync(),
                     new JsonSerializerOptions()
                     {

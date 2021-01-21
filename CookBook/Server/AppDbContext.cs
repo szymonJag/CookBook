@@ -16,8 +16,8 @@ namespace CookBook.Server
 
         
 
-        public DbSet<Ingredient> IngredientsTable { get; set; }
-        public DbSet<IngredientRecipe> IngredientRecipesTable { get; set; }
-        public DbSet<Recipe> RecipesTable { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<IngredientRecipe> IngredientRecipes { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
     }
 }

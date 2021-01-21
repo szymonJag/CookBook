@@ -101,13 +101,13 @@
         IngredientAmount = new IngredientRecipe();
     }
 
-    private void SaveRecipe()
+    private async void SaveRecipe()
     {
         if (ListOfIngredientAmounts.Any())
         {
             Recipe.ListOfIngredients = ListOfIngredientAmounts;
 
-            recipeRepository.CreateRecipe(Recipe);
+            await recipeRepository.CreateRecipe(Recipe);
 
             ListOfIngredientAmounts = new List<IngredientRecipe>();
             Recipe = new Recipe();

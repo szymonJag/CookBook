@@ -22,13 +22,13 @@ namespace CookBook.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Recipe>>> Get()
         {
-            return await context.RecipesTable.ToListAsync();
+            return await context.Recipes.ToListAsync();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Recipe>> Get(int id)
         {
-            var recipe = await context.RecipesTable
+            var recipe = await context.Recipes
                 .Include(x => x.ListOfIngredients)
                 .FirstOrDefaultAsync();
 
@@ -40,17 +40,25 @@ namespace CookBook.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post(Recipe recipe)
         {
-            context.RecipesTable.Add(recipe);
-            await context.SaveChangesAsync();
+            context.Recipes.Add(recipe);
+
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch(DbUpdateConcurrencyException)
+            {
+                throw;
+            }
             return recipe.Id;
         }
 
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            var recipeToRemove = context.RecipesTable.FirstOrDefault(x => x.Id == id);
+            var recipeToRemove = context.Recipes.FirstOrDefault(x => x.Id == id);
 
-            context.RecipesTable.Remove(recipeToRemove);
+            context.Recipes.Remove(recipeToRemove);
             await context.SaveChangesAsync();
         }
 

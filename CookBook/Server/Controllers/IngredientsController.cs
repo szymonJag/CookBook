@@ -22,13 +22,13 @@ namespace CookBook.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Ingredient>>> Get()
         {
-            return await context.IngredientsTable.ToListAsync();
+            return await context.Ingredients.ToListAsync();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Ingredient>> Get(int id)
         {
-            var ingredient = await context.IngredientsTable
+            var ingredient = await context.Ingredients
                 .Include(x => x.IngredientRecipe)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -40,7 +40,7 @@ namespace CookBook.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post(Ingredient ingredient)
         {
-            context.IngredientsTable.Add(ingredient);
+            context.Ingredients.Add(ingredient);
             await context.SaveChangesAsync();
             return ingredient.Id;
         }
@@ -48,16 +48,16 @@ namespace CookBook.Server.Controllers
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            var ingredientToRemove = context.IngredientsTable.FirstOrDefault(x => x.Id == id);
+            var ingredientToRemove = context.Ingredients.FirstOrDefault(x => x.Id == id);
 
-            context.IngredientsTable.Remove(ingredientToRemove);
+            context.Ingredients.Remove(ingredientToRemove);
             await context.SaveChangesAsync();
         }
 
         [HttpPut]
         public async Task<ActionResult> Put(Ingredient ingredient)
         {
-            if (!context.IngredientsTable.Contains(ingredient))
+            if (!context.Ingredients.Contains(ingredient))
             {
                 return new BadRequestResult();
             }
