@@ -11,6 +11,6 @@ namespace CookBook.Shared.Entities
     {
         public string Name { get; set; }
         
-        public List<IngredientRecipe> ListOfIngredients { get; set; }
+        public virtual List<IngredientRecipe> ListOfIngredients { get; set; }
     }
 }

@@ -24,7 +24,7 @@
 
 @code {
     [Parameter]
-    public Ingredient Ingredient { get; set; } = new Ingredient();
+    public IngredientDto Ingredient { get; set; } = new IngredientDto();
 
     [Parameter]
     public EventCallback OnValidSubmit { get; set; }
@@ -34,6 +34,6 @@
 
     private void Clear()
     {
-        Ingredient = new Ingredient();
+        Ingredient = new IngredientDto();
     }
 }

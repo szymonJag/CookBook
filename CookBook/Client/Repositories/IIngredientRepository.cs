@@ -1,4 +1,4 @@
-﻿using CookBook.Shared.Entities;
+﻿using CookBook.Shared.Data.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,10 +6,10 @@ namespace CookBook.Client.Repositories
 {
     public interface IIngredientRepository
     {
-        Task CreateIngredient(Ingredient ingredient);
+        Task CreateIngredient(IngredientDto ingredient);
         Task DeleteIngredient(int id);
-        Task<Ingredient> GetIngredient(int id);
-        Task<List<Ingredient>> GetListOfIngredients();
-        Task UpdateIngredient(Ingredient ingredient);
+        Task<IngredientDto> GetIngredient(int id);
+        Task<List<IngredientDto>> GetListOfIngredients();
+        Task UpdateIngredient(IngredientDto ingredient);
     }
 }

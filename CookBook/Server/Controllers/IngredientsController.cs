@@ -1,4 +1,7 @@
-﻿using CookBook.Shared.Entities;
+﻿using AutoMapper;
+using CookBook.Server.Mappers;
+using CookBook.Shared.Data.Dto;
+using CookBook.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,36 +16,51 @@ namespace CookBook.Server.Controllers
     public class IngredientsController
     {
         private readonly AppDbContext context;
+        private readonly IngredientMapper mapper;
 
-        public IngredientsController(AppDbContext context)
+        public IngredientsController(AppDbContext context, IngredientMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
 
         }
         [HttpGet]
-        public async Task<ActionResult<List<Ingredient>>> Get()
+        public async Task<ActionResult<List<IngredientDto>>> Get()
         {
-            return await context.Ingredients.ToListAsync();
+
+            var ListOfIngredients = await context.Ingredients.ToListAsync();
+
+            var ListOfIngredientsDto = mapper.Map(ListOfIngredients);
+
+            return ListOfIngredientsDto;
+
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Ingredient>> Get(int id)
+        public async Task<ActionResult<IngredientDto>> Get(int id)
         {
             var ingredient = await context.Ingredients
                 .Include(x => x.IngredientRecipe)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
+            var ingredientDto = mapper.Map(ingredient);
+
             if (ingredient == null) { return new NoContentResult(); }
 
-            return ingredient;
+            return ingredientDto;
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post(Ingredient ingredient)
+        public async Task<ActionResult<int>> Post(IngredientDto ingredientDto)
         {
-            context.Ingredients.Add(ingredient);
+            var entity = mapper.Map(ingredientDto);
+
+            context.Ingredients.Add(entity);
             await context.SaveChangesAsync();
-            return ingredient.Id;
+
+            return entity.Id;
+
+            
         }
 
         [HttpDelete("{id}")]
@@ -55,8 +73,10 @@ namespace CookBook.Server.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put(Ingredient ingredient)
+        public async Task<ActionResult> Put(IngredientDto ingredientDto)
         {
+            var ingredient = mapper.Map(ingredientDto);
+
             if (!context.Ingredients.Contains(ingredient))
             {
                 return new BadRequestResult();

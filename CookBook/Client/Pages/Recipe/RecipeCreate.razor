@@ -45,7 +45,7 @@
                     <td>@ingredient.Ingredient.Name</td>
                     <td>@ingredient.Amount</td>
                     <td>
-                        <button class="btn btn-primary" @onclick="@(()=>DeleteIngredientAmount(ingredient))">Delete</button>
+                        <button class="btn btn-primary" @*@onclick="@(()=>DeleteIngredientAmount(ingredient))"*@>Delete</button>
                     </td>
                 </RowTemplate>
             </TableTemplate>
@@ -67,27 +67,23 @@
 
 
 @code{
-    public Recipe Recipe { get; set; } = new Recipe();
+    public RecipeDto Recipe { get; set; } = new RecipeDto();
 
-    public List<Ingredient> ListOfIngredients { get; set; } = new List<Ingredient>();
+    public List<IngredientDto> ListOfIngredients { get; set; } = new List<IngredientDto>();
 
-    public IngredientRecipe IngredientAmount { get; set; } = new IngredientRecipe();
+    public IngredientRecipeDto IngredientAmount { get; set; } = new IngredientRecipeDto();
 
-    public List<IngredientRecipe> ListOfIngredientAmounts { get; set; } = new List<IngredientRecipe>();
-
+    public List<IngredientRecipeDto> ListOfIngredientAmounts { get; set; } = new List<IngredientRecipeDto>();
 
     protected override async Task OnInitializedAsync()
     {
         ListOfIngredients = await ingredientRepository.GetListOfIngredients();
     }
 
-    private void SetTheAmount(Ingredient ingredient)
+    private void SetTheAmount(IngredientDto ingredient)
     {
-        IngredientAmount = new IngredientRecipe();
-        IngredientAmount.IngredientId = ingredient.Id;
-        IngredientAmount.Recipe = Recipe;
-        IngredientAmount.RecipeId = Recipe.Id;
         IngredientAmount.Ingredient = ingredient;
+        IngredientAmount.IngredientId = ingredient.Id;
     }
 
     private void DeleteIngredientAmount(IngredientRecipe ingredientAmount)
@@ -98,7 +94,6 @@
     private void AddIngredientToIngredientAmountList()
     {
         ListOfIngredientAmounts.Add(IngredientAmount);
-        IngredientAmount = new IngredientRecipe();
     }
 
     private async void SaveRecipe()
@@ -109,8 +104,8 @@
 
             await recipeRepository.CreateRecipe(Recipe);
 
-            ListOfIngredientAmounts = new List<IngredientRecipe>();
-            Recipe = new Recipe();
+            ListOfIngredientAmounts = new List<IngredientRecipeDto>();
+            Recipe = new RecipeDto();
             navManager.NavigateTo("/recipes");
         }
     }

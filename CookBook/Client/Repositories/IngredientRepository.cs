@@ -1,4 +1,5 @@
-﻿using CookBook.Shared.Entities;
+﻿using CookBook.Shared.Data.Dto;
+using CookBook.Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace CookBook.Client.Repositories
 {
+
+
     public class IngredientRepository : IIngredientRepository
     {
         private readonly HttpClient httpClient;
@@ -19,7 +22,7 @@ namespace CookBook.Client.Repositories
             this.httpClient = httpClient;
         }
 
-        public async Task CreateIngredient(Ingredient ingredient)
+        public async Task CreateIngredient(IngredientDto ingredient)
         {
             var response = await httpClient.PostAsJsonAsync(url, ingredient);
 
@@ -35,9 +38,9 @@ namespace CookBook.Client.Repositories
             }
         }
 
-        public async Task<List<Ingredient>> GetListOfIngredients()
+        public async Task<List<IngredientDto>> GetListOfIngredients()
         {
-            var response = await httpClient.GetFromJsonAsync<List<Ingredient>>(url);
+            var response = await httpClient.GetFromJsonAsync<List<IngredientDto>>(url);
 
             if (response == null)
             {
@@ -46,27 +49,19 @@ namespace CookBook.Client.Repositories
             return response;
         }
 
-        public async Task<Ingredient> GetIngredient(int id)
+        public async Task<IngredientDto> GetIngredient(int id)
         {
-            Ingredient ingredient = new Ingredient();
+            IngredientDto ingredient = new IngredientDto();
 
             var response = await httpClient.GetAsync($"{url}/{id}");
 
             var body = await response.Content.ReadAsStringAsync();
 
-            if (response.IsSuccessStatusCode)
-            {
-                ingredient = JsonSerializer.Deserialize<Ingredient>(await response.Content.ReadAsStringAsync(),
-                    new JsonSerializerOptions()
-                    {
-                        PropertyNameCaseInsensitive = true,
-                    });
-            }
 
             return ingredient;
         }
 
-        public async Task UpdateIngredient(Ingredient ingredient)
+        public async Task UpdateIngredient(IngredientDto ingredient)
         {
             var response = await httpClient.PutAsJsonAsync(url, ingredient);
 

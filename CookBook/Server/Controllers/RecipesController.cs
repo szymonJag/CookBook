@@ -1,4 +1,7 @@
-﻿using CookBook.Shared.Entities;
+﻿using AutoMapper;
+using CookBook.Server.Mappers;
+using CookBook.Shared.Data.Dto;
+using CookBook.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,43 +16,52 @@ namespace CookBook.Server.Controllers
     public class RecipesController
     {
         private readonly AppDbContext context;
+        private readonly RecipeMapper mapper;
 
-        public RecipesController(AppDbContext context)
+        public RecipesController(AppDbContext context, RecipeMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Recipe>>> Get()
+        public async Task<ActionResult<List<RecipeDto>>> Get()
         {
-            return await context.Recipes.ToListAsync();
+            var ListOfRecipes = await context.Recipes
+                .Include(x => x.ListOfIngredients)
+                .ThenInclude(x => x.Ingredient)
+                .ToListAsync();
+
+            var ListOfRecipesDto = mapper.Map(ListOfRecipes);
+
+            return ListOfRecipesDto;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Recipe>> Get(int id)
+        public async Task<ActionResult<RecipeDto>> Get(int id)
         {
             var recipe = await context.Recipes
                 .Include(x => x.ListOfIngredients)
+                .ThenInclude(x => x.Ingredient)
                 .FirstOrDefaultAsync();
+
+            var recipeDto = mapper.Map(recipe);
 
             if (recipe == null) { return new NotFoundResult(); }
 
-            return recipe;
+            return recipeDto;
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post(Recipe recipe)
+        public async Task<ActionResult<int>> Post(RecipeDto recipeDto)
         {
+            var recipe = mapper.Map(recipeDto);
+
             context.Recipes.Add(recipe);
 
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch(DbUpdateConcurrencyException)
-            {
-                throw;
-            }
+
+            await context.SaveChangesAsync();
+
             return recipe.Id;
         }
 

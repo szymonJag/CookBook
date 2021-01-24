@@ -10,6 +10,6 @@ namespace CookBook.Shared.Entities
     {
         public string Name { get; set; }
         public int Kcal { get; set; }
-        public virtual ICollection<IngredientRecipe> IngredientRecipe { get; set; }
+        public virtual List<IngredientRecipe> IngredientRecipe { get; set; }
     }
 }

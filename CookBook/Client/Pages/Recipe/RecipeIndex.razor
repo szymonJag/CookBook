@@ -9,7 +9,7 @@
     </div>
 </div>
 
-@if (ListOfRecipes != null)
+@*@if (ListOfRecipes != null)
 {
     <TableTemplate Items="ListOfRecipes">
         <TableHeader>
@@ -23,11 +23,32 @@
             <tr>Details</tr>
         </RowTemplate>
     </TableTemplate>
+}*@
+
+
+@if (ListOfRecipes != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var recipe in ListOfRecipes)
+            {
+                <tr>@recipe.Id</tr>
+                <tr>@recipe.Name</tr>
+                <tr>Details</tr>
+            }
+        </tbody>
+    </table>
 }
 
-
 @code {
-    public List<Recipe> ListOfRecipes { get; set; } = new List<Recipe>();
+    public List<RecipeDto> ListOfRecipes { get; set; } = new List<RecipeDto>();
 
     protected override async Task OnInitializedAsync()
     {

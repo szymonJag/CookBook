@@ -2,7 +2,24 @@
 @inject IIngredientRepository ingredientRepository
 <h3>Ingredients list</h3>
 
-<IngredientEditForm Ingredient="Ingredient" OnValidSubmit="ValidSubmit" ButtonText="@text" />
+@*<IngredientEditForm Ingredient="Ingredient" OnValidSubmit="ValidSubmit" ButtonText="@text" />*@
+
+<EditForm Model="IngredientDto" OnValidSubmit="ValidSubmit">
+    <div class="form-group row">
+        <label for="name">Name</label>
+        <div>
+            <InputText class="form-control" id="name" @bind-Value="IngredientDto.Name" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="name">Name</label>
+        <div>
+            <InputNumber class="form-control" id="name" @bind-Value="IngredientDto.Kcal" />
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">@ButtonText</button>
+    <button class="btn btn-danger" @onclick="Clear">Clear</button>
+</EditForm>
 
 <br />
 <br />
@@ -40,11 +57,11 @@
 
 
 @code {
-
-    public Ingredient Ingredient { get; set; } = new Ingredient();
-    public List<Ingredient> ListOfIngredients { get; set; } = new List<Ingredient>();
+    public IngredientDto IngredientDto { get; set; } = new IngredientDto();
+    public List<IngredientDto> ListOfIngredients { get; set; } = new List<IngredientDto>();
     public bool IsEdit { get; set; } = false;
-    private string text = "Save";
+    //private string text = "Save";
+    private string ButtonText = "Save";
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,11 +74,16 @@
         await LoadList();
     }
 
-    private void EditIngredient(Ingredient ingredient)
+    private void Clear()
     {
-        Ingredient = ingredient;
-        IsEdit = true;
-        text = "Edit";
+        IngredientDto = new IngredientDto();
+    }
+
+    private void EditIngredient(IngredientDto ingredient)
+    {
+        IngredientDto = ingredient;
+        //IsEdit = true;
+        //text = "Edit";
     }
 
     private async Task LoadList()
@@ -71,20 +93,23 @@
 
     private async Task ValidSubmit()
     {
-        if (!IsEdit)
-        {
-            Console.WriteLine("Create");
-            await ingredientRepository.CreateIngredient(Ingredient);
-        }
-        else
-        {
-            Console.WriteLine("Update");
-            await ingredientRepository.UpdateIngredient(Ingredient);
-        }
+        //if (!IsEdit)
+        //{
+        //    Console.WriteLine("Create");
+        //    await ingredientRepository.CreateIngredient(Ingredient);
+        //}
+        //else
+        //{
+        //    Console.WriteLine("Update");
+        //    await ingredientRepository.UpdateIngredient(Ingredient);
+        //}
 
-        text = "Save";
-        IsEdit = false;
-        Ingredient = new Ingredient();
+        //text = "Save";
+        //IsEdit = false;
+
+        await ingredientRepository.CreateIngredient(IngredientDto);
+
+        IngredientDto = new IngredientDto();
         await LoadList();
 
     }

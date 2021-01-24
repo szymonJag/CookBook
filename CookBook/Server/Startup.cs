@@ -1,3 +1,4 @@
+using CookBook.Server.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,7 +26,9 @@ namespace CookBook.Server
         {
             services.AddDbContext<AppDbContext>(options =>
               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            
+            services.AddScoped<IngredientMapper>();
+            
             services.AddRazorPages();
         }
 

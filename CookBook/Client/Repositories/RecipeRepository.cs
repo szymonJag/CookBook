@@ -1,4 +1,5 @@
-﻿using CookBook.Shared.Entities;
+﻿using CookBook.Shared.Data.Dto;
+using CookBook.Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,26 +20,19 @@ namespace CookBook.Client.Repositories
         {
             this.httpClient = httpClient;
         }
-        public async Task CreateRecipe(Recipe recipe)
+        public async Task CreateRecipe(RecipeDto recipeDto)
         {
 
-            var options = new JsonSerializerOptions
-            {
-                ReferenceHandler = ReferenceHandler.Preserve
-            };
-
-            string json = JsonSerializer.Serialize(recipe, options);
-
-            var response = await httpClient.PostAsJsonAsync(url, json);
+            var response = await httpClient.PostAsJsonAsync(url, recipeDto);
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new ApplicationException(await response.Content.ReadAsStringAsync());
             }
         }
-        public async Task<List<Recipe>> GetListOfRecipes()
+        public async Task<List<RecipeDto>> GetListOfRecipes()
         {
-            var response = await httpClient.GetFromJsonAsync<List<Recipe>>(url);
+            var response = await httpClient.GetFromJsonAsync<List<RecipeDto>>(url);
 
             if (response == null)
             {
@@ -47,20 +41,14 @@ namespace CookBook.Client.Repositories
             return response;
         }
 
-        public async Task<Recipe> GetRecipe(int id)
+        public async Task<RecipeDto> GetRecipe(int id)
         {
-            Recipe recipe = new Recipe();
+            RecipeDto recipe = new RecipeDto();
+
+
             var response = await httpClient.GetAsync($"{url}/{id}");
 
-            if (response.IsSuccessStatusCode)
-            {
-
-                recipe = JsonSerializer.Deserialize<Recipe>(await response.Content.ReadAsStringAsync(),
-                    new JsonSerializerOptions()
-                    {
-                        PropertyNameCaseInsensitive = true,
-                    });
-            }
+            var body = await response.Content.ReadAsStringAsync();
 
             return recipe;
         }
