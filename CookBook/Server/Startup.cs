@@ -1,15 +1,14 @@
-using CookBook.Server.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
+using AutoMapper;
+using CookBook.Server.Profiles;
 
 namespace CookBook.Server
+
 {
     public class Startup
     {
@@ -27,8 +26,7 @@ namespace CookBook.Server
             services.AddDbContext<AppDbContext>(options =>
               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             
-            services.AddScoped<IngredientMapper>();
-            services.AddScoped<RecipeMapper>();
+            services.AddAutoMapper(typeof(RecipeProfile), typeof(IngredientProfile));
             
             services.AddRazorPages();
         }

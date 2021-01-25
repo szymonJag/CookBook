@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CookBook.Server.Mappers;
 using CookBook.Shared.Data.Dto;
 using CookBook.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +15,12 @@ namespace CookBook.Server.Controllers
     public class RecipesController
     {
         private readonly AppDbContext context;
-        private readonly RecipeMapper mapper;
+        private readonly IMapper mapper;
 
-        public RecipesController(AppDbContext context, RecipeMapper mapper)
+        public RecipesController(AppDbContext context, IMapper mapper)
         {
-            this.context = context;
             this.mapper = mapper;
+            this.context = context;
         }
 
         [HttpGet]
@@ -32,7 +31,8 @@ namespace CookBook.Server.Controllers
                 .ThenInclude(x => x.Ingredient)
                 .ToListAsync();
 
-            var ListOfRecipesDto = mapper.Map(ListOfRecipes);
+
+            var ListOfRecipesDto = mapper.Map<List<RecipeDto>>(ListOfRecipes);
 
             return ListOfRecipesDto;
         }
@@ -45,7 +45,7 @@ namespace CookBook.Server.Controllers
                 .ThenInclude(x => x.Ingredient)
                 .FirstOrDefaultAsync();
 
-            var recipeDto = mapper.Map(recipe);
+            var recipeDto = mapper.Map<RecipeDto>(recipe);
 
             if (recipe == null) { return new NotFoundResult(); }
 
@@ -53,16 +53,15 @@ namespace CookBook.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post(RecipeDto recipeDto)
+        public async Task<ActionResult> Post(RecipeDto recipeDto)
         {
-            var recipe = mapper.Map(recipeDto);
+            var recipe = mapper.Map<Recipe>(recipeDto);
 
             context.Recipes.Add(recipe);
 
-
             await context.SaveChangesAsync();
 
-            return recipe.Id;
+            return new OkResult();
         }
 
         [HttpDelete("{id}")]

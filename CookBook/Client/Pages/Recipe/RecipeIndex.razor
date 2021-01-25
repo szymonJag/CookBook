@@ -10,20 +10,20 @@
 </div>
 
 @*@if (ListOfRecipes != null)
-{
-    <TableTemplate Items="ListOfRecipes">
-        <TableHeader>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Details</th>
-        </TableHeader>
-        <RowTemplate Context="recipe">
-            <tr>@recipe.Id</tr>
-            <tr>@recipe.Name</tr>
-            <tr>Details</tr>
-        </RowTemplate>
-    </TableTemplate>
-}*@
+    {
+        <TableTemplate Items="ListOfRecipes">
+            <TableHeader>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Details</th>
+            </TableHeader>
+            <RowTemplate Context="recipe">
+                <tr>@recipe.Id</tr>
+                <tr>@recipe.Name</tr>
+                <tr>Details</tr>
+            </RowTemplate>
+        </TableTemplate>
+    }*@
 
 
 @if (ListOfRecipes != null)
@@ -39,9 +39,11 @@
         <tbody>
             @foreach (var recipe in ListOfRecipes)
             {
-                <tr>@recipe.Id</tr>
-                <tr>@recipe.Name</tr>
-                <tr>Details</tr>
+                <tr>
+                    <td>@recipe.Id</td>
+                    <td>@recipe.Name</td>
+                    <td>Details</td>
+                </tr>
             }
         </tbody>
     </table>
@@ -50,8 +52,8 @@
 @code {
     public List<RecipeDto> ListOfRecipes { get; set; } = new List<RecipeDto>();
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    ListOfRecipes = await recipeRepository.GetListOfRecipes();
-    //}
+    protected override async Task OnInitializedAsync()
+    {
+        ListOfRecipes = await recipeRepository.GetListOfRecipes();
+    }
 }

@@ -12,6 +12,6 @@ namespace CookBook.Shared.Data.Dto
         public int IngredientId { get; set; }
         public int Amount { get; set; }
         public IngredientDto Ingredient { get; set; }
-        public RecipeDto Recipe { get; set; }
+        public RecipeDto Recipe { get; set; } 
     }
 }

@@ -3,15 +3,13 @@
 @inject IRecipeRepository recipeRepository
 @inject NavigationManager navManager
 
-@* USING ONLY RECIPE *@
-
 test
 <div class="container col-12">
     <EditForm Model="Recipe" OnValidSubmit="SaveRecipe">
         <div class="row">
             <button class="btn btn-primary" type="submit">Save recipe</button>
         </div>
-        
+
         <div class="row">
             <div class="col-4">
                 <div class="form-control">
@@ -24,17 +22,17 @@ test
         <br />
         <div class="row">
             <div class="col-6">
-                <TableTemplate Items="ListOfIngredients">
+                <TableTemplate Items="ListOfIngredientRecipeDto">
                     <TableHeader>
                         <th>Name</th>
                         <th>Kcal</th>
                         <th>Action</th>
                     </TableHeader>
                     <RowTemplate Context="ingredient">
-                        <td>@ingredient.Name</td>
-                        <td>@ingredient.Kcal</td>
+                        <td>@ingredient.Ingredient.Name</td>
+                        <td>@ingredient.Ingredient.Kcal</td>
                         <td>
-                            <button class="btn btn-primary" @onclick="@(()=>SetTheAmount(ingredient))">Add</button>
+                            <button class="btn btn-primary" @onclick="@(()=> SetTheAmount(ingredient))">Add</button>
                         </td>
                     </RowTemplate>
                 </TableTemplate>
@@ -88,19 +86,31 @@ test
 
     public List<IngredientDto> ListOfIngredients { get; set; } = new List<IngredientDto>();
 
+    public List<IngredientRecipeDto> ListOfIngredientRecipeDto { get; set; } = new List<IngredientRecipeDto>();
 
     //public List<IngredientRecipeDto> ListOfIngredientAmounts { get; set; } = new List<IngredientRecipeDto>();
 
     protected override async Task OnInitializedAsync()
     {
         ListOfIngredients = await ingredientRepository.GetListOfIngredients();
+
+        foreach (var ingredient in ListOfIngredients)
+        {
+
+            ListOfIngredientRecipeDto.Add(new IngredientRecipeDto
+            {
+                Ingredient = ingredient,
+                Recipe = Recipe,
+                IngredientId = ingredient.Id,
+                Amount = 0
+            });
+        }
     }
 
-    private void SetTheAmount(IngredientDto ingredientDto)
+    private void SetTheAmount(IngredientRecipeDto ingredientRecipeDto)
     {
         IngredientRecipeDto = new IngredientRecipeDto();
-        IngredientRecipeDto.Ingredient = ingredientDto;
-        IngredientRecipeDto.IngredientId = ingredientDto.Id;
+        IngredientRecipeDto = ingredientRecipeDto;
 
     }
 

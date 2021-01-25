@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CookBook.Server.Mappers;
 using CookBook.Shared.Data.Dto;
 using CookBook.Shared.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using AutoMapper.QueryableExtensions;
 namespace CookBook.Server.Controllers
 {
     [ApiController]
@@ -16,9 +15,9 @@ namespace CookBook.Server.Controllers
     public class IngredientsController
     {
         private readonly AppDbContext context;
-        private readonly IngredientMapper mapper;
+        private readonly IMapper mapper;
 
-        public IngredientsController(AppDbContext context, IngredientMapper mapper)
+        public IngredientsController(AppDbContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
@@ -30,7 +29,7 @@ namespace CookBook.Server.Controllers
 
             var ListOfIngredients = await context.Ingredients.ToListAsync();
 
-            var ListOfIngredientsDto = mapper.Map(ListOfIngredients);
+            var ListOfIngredientsDto = mapper.Map<List<IngredientDto>>(ListOfIngredients);
 
             return ListOfIngredientsDto;
 
@@ -43,7 +42,7 @@ namespace CookBook.Server.Controllers
                 .Include(x => x.IngredientRecipe)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            var ingredientDto = mapper.Map(ingredient);
+            var ingredientDto = mapper.Map<IngredientDto>(ingredient);
 
             if (ingredient == null) { return new NoContentResult(); }
 
@@ -53,7 +52,7 @@ namespace CookBook.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post(IngredientDto ingredientDto)
         {
-            var entity = mapper.Map(ingredientDto);
+            var entity = mapper.Map<Ingredient>(ingredientDto);
 
             context.Ingredients.Add(entity);
             await context.SaveChangesAsync();
@@ -75,7 +74,7 @@ namespace CookBook.Server.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(IngredientDto ingredientDto)
         {
-            var ingredient = mapper.Map(ingredientDto);
+            var ingredient = mapper.Map<Ingredient>(ingredientDto);
 
             if (!context.Ingredients.Contains(ingredient))
             {
