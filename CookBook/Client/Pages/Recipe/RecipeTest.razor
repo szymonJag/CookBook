@@ -42,9 +42,9 @@ test
             <div class="col-6">
                 List of ingredients
                 <br />
-                @if (ListOfIngredientAmounts != null)
+                @if (Recipe.ListOfIngredients != null)
                 {
-                    <TableTemplate Items="ListOfIngredientAmounts">
+                    <TableTemplate Items="Recipe.ListOfIngredients">
                         <TableHeader>
                             <th>Name</th>
                             <th>Amount</th>
@@ -89,7 +89,7 @@ test
     public List<IngredientDto> ListOfIngredients { get; set; } = new List<IngredientDto>();
 
 
-    public List<IngredientRecipeDto> ListOfIngredientAmounts { get; set; } = new List<IngredientRecipeDto>();
+    //public List<IngredientRecipeDto> ListOfIngredientAmounts { get; set; } = new List<IngredientRecipeDto>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -111,7 +111,7 @@ test
 
     private void AddIngredientToIngredientAmountList()
     {
-        ListOfIngredientAmounts.Add(IngredientRecipeDto);
+        Recipe.ListOfIngredients.Add(IngredientRecipeDto);
 
         IngredientRecipeDto = new IngredientRecipeDto();
     }
@@ -119,8 +119,6 @@ test
 
     private async Task SaveRecipe()
     {
-        Recipe.ListOfIngredients = ListOfIngredientAmounts;
-
         await recipeRepository.CreateRecipe(Recipe);
 
         Recipe = new RecipeDto();
