@@ -60,6 +60,22 @@ namespace CookBook.Server.Controllers
             context.Recipes.Add(recipe);
 
             await context.SaveChangesAsync();
+            
+            //try
+            //{
+            //    await context.SaveChangesAsync();
+            //}
+            //catch (Exception ex)
+            //{
+            //    if (ex.InnerException != null)
+            //    {
+            //        Console.WriteLine(ex.InnerException.Message.ToString());
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("chuj");
+            //    }
+            //}
 
             return new OkResult();
         }
@@ -67,9 +83,11 @@ namespace CookBook.Server.Controllers
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
+
             var recipeToRemove = context.Recipes.FirstOrDefault(x => x.Id == id);
 
             context.Recipes.Remove(recipeToRemove);
+
             await context.SaveChangesAsync();
         }
 

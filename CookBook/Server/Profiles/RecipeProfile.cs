@@ -15,6 +15,11 @@ namespace CookBook.Server.Profiles
             CreateMap<Recipe, RecipeDto>()
                 .ForMember(dest => dest.ListOfIngredients, conf => conf.MapFrom(src => src.ListOfIngredients))
                 .ReverseMap();
+
+            CreateMap<IngredientRecipe, IngredientRecipeDto>()
+                .ForMember(dest => dest.Ingredient, conf => conf.MapFrom(src => src.Ingredient))
+                .ForMember(dest => dest.Recipe, conf => conf.MapFrom(src => src.Recipe))
+                .ReverseMap();
         }
     }
 }
