@@ -17,8 +17,8 @@ namespace CookBook.Server.Mappers
             mapper = new MapperConfiguration(config =>
             {
                 config.CreateMap<Recipe, RecipeDto>()
+                      .ForMember(dest => dest.ListOfIngredients, conf => conf.MapFrom(src => src.ListOfIngredients))
                       .ReverseMap();
-
             }).CreateMapper();
 
         }
@@ -31,7 +31,7 @@ namespace CookBook.Server.Mappers
         {
             return mapper.Map<Recipe>(recipeDto);
         }
-
+        
         public List<RecipeDto> Map(List<Recipe> recipes)
         {
             return mapper.Map<List<Recipe>, List<RecipeDto>>(recipes);

@@ -1,0 +1,129 @@
+﻿@page "/recipes/create"
+@inject IIngredientRepository ingredientRepository
+@inject IRecipeRepository recipeRepository
+@inject NavigationManager navManager
+
+@* USING ONLY RECIPE *@
+
+test
+<div class="container col-12">
+    <EditForm Model="Recipe" OnValidSubmit="SaveRecipe">
+        <div class="row">
+            <button class="btn btn-primary" type="submit">Save recipe</button>
+        </div>
+        
+        <div class="row">
+            <div class="col-4">
+                <div class="form-control">
+                    Name:
+                    <InputText @bind-Value="Recipe.Name" />
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-6">
+                <TableTemplate Items="ListOfIngredients">
+                    <TableHeader>
+                        <th>Name</th>
+                        <th>Kcal</th>
+                        <th>Action</th>
+                    </TableHeader>
+                    <RowTemplate Context="ingredient">
+                        <td>@ingredient.Name</td>
+                        <td>@ingredient.Kcal</td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="@(()=>SetTheAmount(ingredient))">Add</button>
+                        </td>
+                    </RowTemplate>
+                </TableTemplate>
+            </div>
+            <div class="col-6">
+                List of ingredients
+                <br />
+                @if (ListOfIngredientAmounts != null)
+                {
+                    <TableTemplate Items="ListOfIngredientAmounts">
+                        <TableHeader>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </TableHeader>
+                        <RowTemplate Context="ingredient">
+                            <td>@ingredient.Ingredient.Name</td>
+                            <td>@ingredient.Amount</td>
+                            <td>
+                                <button class="btn btn-primary" @*@onclick="@(()=>DeleteIngredientAmount(ingredient))" *@>Delete</button>
+                            </td>
+                        </RowTemplate>
+                    </TableTemplate>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                @if (IngredientRecipeDto.Ingredient != null)
+                {
+                    <p>Ingredient id: @IngredientRecipeDto.IngredientId | Ingredient name: @IngredientRecipeDto.Ingredient.Name | Ingredient kcal: @IngredientRecipeDto.Ingredient.Kcal</p>
+                    <div class="form-group">
+                        Value
+                        <InputNumber @bind-Value="IngredientRecipeDto.Amount" />
+                    </div>
+
+                    <button class="btn btn-primary" @onclick="AddIngredientToIngredientAmountList">Add to recipe</button>}
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+
+
+
+
+@code{
+    public RecipeDto Recipe { get; set; } = new RecipeDto();
+
+    public IngredientRecipeDto IngredientRecipeDto { get; set; } = new IngredientRecipeDto();
+
+    public List<IngredientDto> ListOfIngredients { get; set; } = new List<IngredientDto>();
+
+
+    public List<IngredientRecipeDto> ListOfIngredientAmounts { get; set; } = new List<IngredientRecipeDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListOfIngredients = await ingredientRepository.GetListOfIngredients();
+    }
+
+    private void SetTheAmount(IngredientDto ingredientDto)
+    {
+        IngredientRecipeDto = new IngredientRecipeDto();
+        IngredientRecipeDto.Ingredient = ingredientDto;
+        IngredientRecipeDto.IngredientId = ingredientDto.Id;
+
+    }
+
+    private void DeleteIngredientAmount(IngredientRecipe ingredientAmount)
+    {
+
+    }
+
+    private void AddIngredientToIngredientAmountList()
+    {
+        ListOfIngredientAmounts.Add(IngredientRecipeDto);
+
+        IngredientRecipeDto = new IngredientRecipeDto();
+    }
+
+
+    private async Task SaveRecipe()
+    {
+        Recipe.ListOfIngredients = ListOfIngredientAmounts;
+
+        await recipeRepository.CreateRecipe(Recipe);
+
+        Recipe = new RecipeDto();
+    }
+
+}

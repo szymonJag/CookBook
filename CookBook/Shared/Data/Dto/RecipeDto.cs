@@ -11,6 +11,6 @@ namespace CookBook.Shared.Data.Dto
     {
         public string Name { get; set; }
 
-        public List<IngredientRecipeDto> ListOfIngredients { get; set; }
+        public List<IngredientRecipeDto> ListOfIngredients { get; set; } = new List<IngredientRecipeDto>();
     }
 }

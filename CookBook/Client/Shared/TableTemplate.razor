@@ -1,4 +1,6 @@
 ﻿@typeparam TItem
+@if (Items != null)
+{
     <div class="col-10">
         <div class="table-wrapper-scroll-y my-custom-scrollbar">
             <table class="table table-bordered table-striped mb-0">
@@ -18,6 +20,8 @@
             </table>
         </div>
     </div>
+}
+
 <br />
 
 @code {

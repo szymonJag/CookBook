@@ -28,6 +28,7 @@ namespace CookBook.Server
               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             
             services.AddScoped<IngredientMapper>();
+            services.AddScoped<RecipeMapper>();
             
             services.AddRazorPages();
         }

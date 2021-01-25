@@ -91,19 +91,6 @@ namespace CookBook.Server.Controllers
                 }
             }
 
-            //var idsOfAddresses = recipe.ListOfIngredients.Select(x => x.Id).ToList();
-            //var ingredientsToDelete = await context
-            //    .RecipesTable
-            //    .Where(x=>!idsOfAddresses.Contains(x.Id) && x.)
-            //    //.Where(x => !idsOfAddresses.Contains(x.Id) && x.1 == recipe.Id)
-            //    .ToListAsync();
-
-            //context.RemoveRange(ingredientsToDelete);
-
-            //await context.SaveChangesAsync();
-
-            //return NoContent();
-
             return new OkResult();
         }
     }

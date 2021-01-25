@@ -50,8 +50,8 @@
 @code {
     public List<RecipeDto> ListOfRecipes { get; set; } = new List<RecipeDto>();
 
-    protected override async Task OnInitializedAsync()
-    {
-        ListOfRecipes = await recipeRepository.GetListOfRecipes();
-    }
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    ListOfRecipes = await recipeRepository.GetListOfRecipes();
+    //}
 }
